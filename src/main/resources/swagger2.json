@@ -1,0 +1,746 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample server for news",
+    "version": "1.0.0",
+    "title": "News server"
+  },
+  "host": "postman-test:1234",
+  "basePath": "/v1",
+  "tags": [],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/auth": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get auth token",
+        "description": "Get auth token",
+        "operationId": "getToken",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "login",
+            "in": "query",
+            "description": "User login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "User password",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AuthResult"
+            }
+          },
+          "403": {
+            "description": "Auth error",
+            "schema": {
+              "type": "string",
+              "example": "Incorrect login or password"
+            }
+          }
+        }
+      }
+    },
+    "/rubric": {
+      "get": {
+        "tags": [
+          "rubrics"
+        ],
+        "summary": "Get rubrics",
+        "description": "",
+        "operationId": "getRubrics",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/AuthToken"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort order",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Rubric"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer-token": []
+          }
+        ]
+      }
+    },
+    "/rubric/{rubricId}": {
+      "get": {
+        "tags": [
+          "rubrics"
+        ],
+        "summary": "Get rubric",
+        "description": "",
+        "operationId": "getRubricById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/AuthToken"
+          },
+          {
+            "name": "rubricId",
+            "in": "path",
+            "description": "ID of rubric to return",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "author object that needs to be added",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RecordToPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Rubric"
+            }
+          }, "404": {
+            "description": "not found",
+            "schema": {
+              "type": "string",
+              "example": "Rubric with id = 123 not found"
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer-token": []
+          }
+        ]
+      }
+    },
+    "/author": {
+      "put": {
+        "tags": [
+          "authors"
+        ],
+        "summary": "Add or update author",
+        "description": "",
+        "operationId": "putAuthor",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/AuthToken"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Author for create or update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Author"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Author"
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer-token": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "authors"
+        ],
+        "summary": "Get authors",
+        "description": "",
+        "operationId": "getAuthors",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/AuthToken"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort order",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Author"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer-token": []
+          }
+        ]
+      }
+    },
+    "/author/{authorId}": {
+      "get": {
+        "tags": [
+          "authors"
+        ],
+        "summary": "Get author",
+        "description": "",
+        "operationId": "getAuthorById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/AuthToken"
+          },
+          {
+            "name": "authorId",
+            "in": "path",
+            "description": "ID of author to return",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Author"
+            }
+          }, "404": {
+            "description": "not found",
+            "schema": {
+              "type": "string",
+              "example": "Author with id = 123 not found"
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer-token": []
+          }
+        ]
+      }
+    },
+    "/record": {
+      "post": {
+        "tags": [
+          "records"
+        ],
+        "summary": "Add a new record to the store",
+        "description": "",
+        "operationId": "addRecord",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/AuthToken"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "record object that needs to be added to the store",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RecordToPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Record"
+            }
+          },"400": {
+            "description": "bad request",
+            "schema": {
+              "type": "string",
+              "example": "Rubric with id 123 not found"
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer-token": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "records"
+        ],
+        "summary": "Get records",
+        "description": "",
+        "operationId": "getRecords",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/AuthToken"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort order",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          {
+            "name": "rubricid",
+            "in": "query",
+            "description": "Rubric Id for filter",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "authorid",
+            "in": "query",
+            "description": "Rubric Id for filter",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Status for filter",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "created",
+              "verified",
+              "published"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Record"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer-token": []
+          }
+        ]
+      }
+    },
+    "/record/{recordId}": {
+      "put": {
+        "tags": [
+          "records"
+        ],
+        "summary": "Put record",
+        "description": "",
+        "operationId": "putRecord",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/AuthToken"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Record for create or update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RecordToPost"
+            }
+          },
+          {
+            "name": "recordId",
+            "in": "path",
+            "description": "ID of record to return",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Record"
+            }
+          }, "404": {
+            "description": "not found",
+            "schema": {
+              "type": "string",
+              "example": "Record with id = fb5cee5d-2276-4d98-9299-3fa401931cb5 not found"
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer-token": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "records"
+        ],
+        "summary": "Update record status",
+        "description": "",
+        "operationId": "UpdateRecord",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/AuthToken"
+          },
+          {
+            "name": "recordId",
+            "in": "path",
+            "description": "ID of record to update status",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "New status of record",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "created",
+              "verified",
+              "published"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Record"
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer-token": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "records"
+        ],
+        "summary": "Get record",
+        "description": "",
+        "operationId": "getRecord",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/AuthToken"
+          },
+          {
+            "name": "recordId",
+            "in": "path",
+            "description": "ID of record to return",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Record"
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer-token": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "records"
+        ],
+        "summary": "Delete record",
+        "description": "Delete record",
+        "operationId": "deleteRecord",
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/AuthToken"
+          },
+          {
+            "name": "recordId",
+            "in": "path",
+            "description": "The ID of the record you want to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "example": "Record with id '8227cad5-0676-419f-b4b2-88d9a1d5e451' deleted"
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer-token": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearer-token": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "AuthResult": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "expiredTime": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "example": {
+        "login": "admin",
+        "token": "SomeToken",
+        "expiredTime": "2017-07-21T17:32:28Z"
+      }
+    },
+    "Rubric": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 256
+        }
+      },
+      "example": {
+        "id": 6,
+        "name": "name",
+        "description": "descr"
+      }
+    },
+    "Author": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "id": 5,
+        "firstName": "Ivan",
+        "lastName": "Ivanov",
+        "position": "Corrector"
+      }
+    },
+    "RecordToPost": {
+      "type": "object",
+      "properties": {
+        "rubricId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "authorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "rubricId": 10,
+        "authorId": 5,
+        "title": "name",
+        "content": "text text"
+      }
+    },
+    "Record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "rubricId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "authorId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "created",
+            "verified",
+            "published"
+          ]
+        },
+        "createDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updateDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "example": {
+        "id": "8227cad5-0676-419f-b4b2-88d9a1d5e451",
+        "rubricId": 10,
+        "authorId": 5,
+        "title": "name",
+        "content": "text text",
+        "status": "created",
+        "createDate": "2017-07-21T17:32:28Z",
+        "updateDate": "2017-07-21T17:32:28Z"
+      }
+    }
+  },
+  "parameters": {
+    "AuthToken": {
+      "name": "Authorization",
+      "in": "header",
+      "type": "string",
+      "required": true,
+      "description": "Bearer auth token. Value example: 'Bearer 84f8a84bc0edeeb5742e9c2b706e94ea'"
+    }
+  }
+}

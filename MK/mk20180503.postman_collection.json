@@ -1,0 +1,82 @@
+{
+	"info": {
+		"_postman_id": "51607097-1348-48a3-88db-8d02ca61bb55",
+		"name": "mk20180503",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get auth token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f3285a72-e204-4ccb-9882-2323d229b769",
+						"type": "text/javascript",
+						"exec": [
+							"var code = parseInt(pm.variables.get(\"code\"));",
+							"",
+							"pm.test(\"Status code is \" + code, function () {",
+							"    pm.response.to.have.status(code);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://k1606010:1234/v1/auth?{{loginPassword}}",
+					"protocol": "http",
+					"host": [
+						"k1606010"
+					],
+					"port": "1234",
+					"path": [
+						"v1",
+						"auth"
+					],
+					"query": [
+						{
+							"key": "{{loginPassword}}",
+							"value": null
+						}
+					]
+				},
+				"description": "Get auth token"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "cd40bd07-d4fc-4496-9167-849acd67b3c0",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "981b3ee1-9d84-4bdc-8298-be276696f3f0",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

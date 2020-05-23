@@ -1,0 +1,24 @@
+@(tname: String, colNames: List[String],a: Set[List[String]])
+
+<html>
+<body>
+<h3>@tname</h3>
+<a href="/main"> Main </a><a href="/authors"> Authors </a><a href="/rubrics"> Rubrics </a><a href="/users"> Users </a><a href="/records"> Records </a><br/><br/>
+<table border="1px">
+    <tr>
+        @for(cn <- colNames) {
+        <th>@cn</th>
+        }
+    </tr>
+    @for(author <- a) {
+    <tr>
+        @for(ar <- author){
+        <th>@ar</th>
+        }
+    </tr>
+    }
+</table>
+<br/>
+<a href="/main"> Main </a><a href="/authors"> Authors </a><a href="/rubrics"> Rubrics </a><a href="/users"> Users </a><a href="/records"> Records </a>
+</body>
+</html>
