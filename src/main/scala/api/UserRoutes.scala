@@ -35,6 +35,12 @@ trait UserRoutes extends Processing {
     }
   }
 
+  val about: Route = pathPrefix("about") {
+    authorize(true) {
+      complete(s"Hi! I am test-news-server for research postman features. Current time: ${Instant.now().toString} ")
+    }
+  }
+
   val web: Route =
     pathPrefix("main") {
       var s = main.render()
@@ -52,7 +58,7 @@ trait UserRoutes extends Processing {
       var s = table.render("Список логинов паролей", List("Логин", "Пароль"), alist)
       complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s.body))
     } ~ pathPrefix("records") {
-     // val alist: Set[List[String]] = for (r <- records) yield List(r.id, r.rubricId.toString, r.authorId.toString, r.status, r.creator, r.createTime, r.modifiedDate, r.title, r.content)
+      // val alist: Set[List[String]] = for (r <- records) yield List(r.id, r.rubricId.toString, r.authorId.toString, r.status, r.creator, r.createTime, r.modifiedDate, r.title, r.content)
       val alist: Set[List[String]] = for (r <- records) yield List(r.id, r.rubricId.toString, r.authorId.toString, r.status, r.createTime, r.modifiedDate, r.title, r.content)
       var s = table.render("Список новостей", List("Идентификатор", "Рубрика", "Автор", "Статус", "Пользователь", "Дата создания", "Дата изменения", "Заголовок", "Содержание"), alist)
       complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s.body))
@@ -108,16 +114,16 @@ trait UserRoutes extends Processing {
     concat({
       pathEndOrSingleSlash {
         get {
-          //          headerValueByName("Authorization") { token =>
-          //            authorize(checkToken(token)) {
+                    headerValueByName("Authorization") { token =>
+                      authorize(checkToken(token)) {
           parameters('sort ?) { sortOrder =>
             complete(
               if (sortOrder.getOrElse("") == "desc") authors.toSeq.sortWith(_.id > _.id)
               else if (sortOrder.getOrElse("") == "asc") authors.toSeq.sortWith(_.id < _.id)
               else authors)
           }
-          //  }
-          //    }
+            }
+              }
         } ~
           put {
             //            headerValueByName("Authorization") { token =>
@@ -211,7 +217,7 @@ trait UserRoutes extends Processing {
 
   val myRoutes: Route = cors(st) {
     doc ~ sw ~ web ~ pathPrefix("v1") {
-      ping ~ routeAuth ~ routeRubrics ~ routeAuthors ~ routeRecords
+      ping ~ about ~ routeAuth ~ routeRubrics ~ routeAuthors ~ routeRecords
     }
   }
 
