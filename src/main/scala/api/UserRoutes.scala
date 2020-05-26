@@ -114,16 +114,10 @@ trait UserRoutes extends Processing {
     concat({
       pathEndOrSingleSlash {
         get {
-                    headerValueByName("Authorization") { token =>
-                      authorize(checkToken(token)) {
           parameters('sort ?) { sortOrder =>
             complete(
-              if (sortOrder.getOrElse("") == "desc") authors.toSeq.sortWith(_.id > _.id)
-              else if (sortOrder.getOrElse("") == "asc") authors.toSeq.sortWith(_.id < _.id)
-              else authors)
+              authors.toSeq.sortWith(_.id < _.id))
           }
-            }
-              }
         } ~
           put {
             //            headerValueByName("Authorization") { token =>
