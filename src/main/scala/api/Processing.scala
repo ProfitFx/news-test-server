@@ -26,7 +26,6 @@ trait Processing extends JsonSupport {
   var tokens = Set.empty[TokenResponse]
 
   var rubrics = Set.empty[Rubric]
-
   val rb: mutable.Buffer[String] = conf.getStringList("application.rubrics").asScala
   rb.foreach(x => {
     val s = x.split(";")

@@ -41,6 +41,20 @@ trait UserRoutes extends Processing {
     }
   }
 
+  val clear: Route = pathPrefix("clear") {
+    authorize(true) {
+      records = Set.empty[Record]
+      tokens = Set.empty[TokenResponse]
+      authors = Set.empty[Author]
+      //      val au: mutable.Buffer[String] = conf.getStringList("application.authors").asScala
+      //      au.foreach(x => {
+      //        val s = x.split(";")
+      //        authors += Author(s(0).toInt, s(1), s(2), s(3))
+      //      })
+      complete(s"Authors, records snd token clean")
+    }
+  }
+
   val web: Route =
     pathPrefix("main") {
       var s = main.render()
@@ -139,12 +153,20 @@ trait UserRoutes extends Processing {
       path(IntNumber) { id =>
         pathEndOrSingleSlash {
           get {
-            headerValueByName("Authorization") { token =>
-              authorize(checkToken(token)) {
-                val a = authors.find(_.id == id)
-                if (a.nonEmpty) complete(a)
-                else complete(StatusCodes.NotFound, s"Author with id = $id not found")
-              }
+            //            headerValueByName("Authorization") { token =>
+            //              authorize(checkToken(token)) {
+            val a = authors.find(_.id == id)
+            if (a.nonEmpty) complete(a)
+            else complete(StatusCodes.NotFound, s"Author with id = $id not found")
+            //             }
+            //           }
+          } ~ delete {
+            val a = authors.find(_.id == id.toString)
+            if (a.isEmpty) {
+              complete(StatusCodes.NotFound, s"Author with id '$id' not found")
+            } else {
+              authors -= a.get
+              complete(s"Author with id '$id' deleted")
             }
           }
         }
@@ -154,64 +176,64 @@ trait UserRoutes extends Processing {
   }
 
   val routeRecords: Route = pathPrefix("record") {
-    headerValueByName("Authorization") { token =>
-      authorize(checkToken(token)) {
-        concat({
-          pathEndOrSingleSlash {
-            get {
-              parameters('sort ?, 'rubricid.as[Int] ?, 'authorid.as[Int] ?, 'status ?) {
-                (sortOrder, rubricId, authorId, status) => {
-                  var rcs = records
-                  if (rubricId.isDefined) {
-                    rcs = rcs.filter(_.rubricId == rubricId.get)
-                  }
-                  if (authorId.isDefined) {
-                    rcs = rcs.filter(_.authorId == authorId.get)
-                  }
-                  if (status.isDefined) {
-                    rcs = rcs.filter(_.status == status.get)
-                  }
-                  complete(
-                    if (sortOrder.getOrElse("") == "desc") rcs.toSeq.sortWith(_.createTime > _.createTime)
-                    else if (sortOrder.getOrElse("") == "asc") rcs.toSeq.sortWith(_.createTime < _.createTime)
-                    else rcs)
-                }
+    //    headerValueByName("Authorization") { token =>
+    //      authorize(checkToken(token)) {
+    concat({
+      pathEndOrSingleSlash {
+        get {
+          parameters('sort ?, 'rubricid.as[Int] ?, 'authorid.as[Int] ?, 'status ?) {
+            (sortOrder, rubricId, authorId, status) => {
+              var rcs = records
+              if (rubricId.isDefined) {
+                rcs = rcs.filter(_.rubricId == rubricId.get)
               }
-            } ~
-              post {
-                entity(as[RecordToPost]) { r =>
-                  postRecord(r)
-                }
+              if (authorId.isDefined) {
+                rcs = rcs.filter(_.authorId == authorId.get)
               }
-          }
-        }, {
-          path(JavaUUID) { id =>
-            pathEndOrSingleSlash {
-              get {
-                val rec = records.find(_.id == id.toString)
-                if (rec.nonEmpty) complete(rec)
-                else complete(StatusCodes.NotFound, s"Record with id = $id not found")
-              } ~ put {
-                entity(as[RecordToPost]) { r =>
-                  putRecord(r, id.toString)
-                }
-              } ~ patch {
-                parameters('status) { st =>
-                  updateRecordStatus(st, id.toString)
-                }
-              } ~ delete {
-                deleteRecord(id.toString)
+              if (status.isDefined) {
+                rcs = rcs.filter(_.status == status.get)
               }
+              complete(
+                if (sortOrder.getOrElse("") == "desc") rcs.toSeq.sortWith(_.createTime > _.createTime)
+                else if (sortOrder.getOrElse("") == "asc") rcs.toSeq.sortWith(_.createTime < _.createTime)
+                else rcs)
             }
           }
-        })
+        } ~
+          post {
+            entity(as[RecordToPost]) { r =>
+              postRecord(r)
+            }
+          }
       }
-    }
+    }, {
+      path(JavaUUID) { id =>
+        pathEndOrSingleSlash {
+          get {
+            val rec = records.find(_.id == id.toString)
+            if (rec.nonEmpty) complete(rec)
+            else complete(StatusCodes.NotFound, s"Record with id = $id not found")
+          } ~ put {
+            entity(as[RecordToPost]) { r =>
+              putRecord(r, id.toString)
+            }
+          } ~ patch {
+            parameters('status) { st =>
+              updateRecordStatus(st, id.toString)
+            }
+          } ~ delete {
+            deleteRecord(id.toString)
+          }
+        }
+      }
+    })
+    //    }
+    //  }
   }
 
   val myRoutes: Route = cors(st) {
     doc ~ sw ~ web ~ pathPrefix("v1") {
-      ping ~ about ~ routeAuth ~ routeRubrics ~ routeAuthors ~ routeRecords
+      ping ~ about ~ clear ~ routeAuth ~ routeRubrics ~ routeAuthors ~ routeRecords
     }
   }
 
