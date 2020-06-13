@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "5dbbfa08-05fe-4476-8e94-f9c5dd6bd7f2",
 		"name": "Postman workshop",
+		"description": "Коллекция для проведения воркшопа\r\nПроверка приложения - ping: http://localhost:1234/v1/ping\r\nДокументация к сервису: http://localhost:1234/doc\r\nSwagger: http://localhost:1234/swagger\r\nСтраничка с сущностями http://localhost:1234/main",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -112,21 +113,45 @@
 							"script": {
 								"id": "00e30857-dea3-46b6-b5b7-64e77c3bd747",
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
 									"\r",
-									"pm.test(\"Get user name\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.login).to.eql(\"admin\");\r",
-									"});\r",
 									"\r",
-									"pm.test(\"Set auth token\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    var atoken = \"Bearer \" + jsonData.token\r",
-									"    console.log(atoken);\r",
-									"    pm.environment.set(\"Authorization\", atoken);\r",
-									"});"
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"// pm.test(\"Status code is 200\", function () {\r",
+									"//     pm.response.to.have.status(200);\r",
+									"// });\r",
+									"\r",
+									"// pm.test(\"Get user name\", function () {\r",
+									"//     var jsonData = pm.response.json();\r",
+									"//     pm.expect(jsonData.login).to.eql(\"admin\");\r",
+									"// });\r",
+									"\r",
+									"// pm.test(\"Set auth token\", function () {\r",
+									"//     var jsonData = pm.response.json();\r",
+									"//     var atoken = \"Bearer \" + jsonData.token\r",
+									"//     console.log(atoken);\r",
+									"//     pm.environment.set(\"Authorization\", atoken);\r",
+									"// });"
 								],
 								"type": "text/javascript"
 							}
@@ -641,7 +666,7 @@
 			"name": "4 Runner",
 			"item": [
 				{
-					"name": "4.1 Get auth token Copy",
+					"name": "1 Get auth token",
 					"event": [
 						{
 							"listen": "test",
@@ -777,7 +802,7 @@
 					]
 				},
 				{
-					"name": "____4.1 Add or update author runner",
+					"name": "2 Add or update author runner",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -1267,28 +1292,28 @@
 	],
 	"variable": [
 		{
-			"id": "df32057d-459e-4761-93ec-c92b3d530e73",
+			"id": "03bab557-840c-40df-83a6-785b9ecfe2ad",
 			"key": "host",
 			"value": "127.0.0.1",
 			"type": "string",
 			"disabled": true
 		},
 		{
-			"id": "266ee6ec-b186-41df-949f-10f6ccba8d58",
+			"id": "109cf570-87ab-4be5-8530-1c176d7d818a",
 			"key": "port",
 			"value": "1234",
 			"type": "string",
 			"disabled": true
 		},
 		{
-			"id": "ce185f75-afd3-4ac0-b960-a1733f6ecb8d",
+			"id": "1667af1c-2ee0-4839-b683-ce725b0e7b83",
 			"key": "host1",
 			"value": "192.168.88.241",
 			"type": "string",
 			"disabled": true
 		},
 		{
-			"id": "b07dff6a-ecc8-472f-a5a3-a23fafc22d31",
+			"id": "05c16211-4324-4dab-94fb-80bee500d04a",
 			"key": "hostPort",
 			"value": "127.0.0.1:1234",
 			"type": "string"
