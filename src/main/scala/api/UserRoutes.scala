@@ -161,7 +161,7 @@ trait UserRoutes extends Processing {
             //             }
             //           }
           } ~ delete {
-            val a = authors.find(_.id == id.toString)
+            val a = authors.find(_.id == id)
             if (a.isEmpty) {
               complete(StatusCodes.NotFound, s"Author with id '$id' not found")
             } else {
