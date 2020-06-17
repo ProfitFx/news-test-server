@@ -1,5 +1,0 @@
-loginPassword,code
-login=admin&password=admin,200
-password=admin1,404
-login=admin2,404
-login=admin3&password=admin3,403

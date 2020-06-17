@@ -51,7 +51,21 @@ trait UserRoutes extends Processing {
       //        val s = x.split(";")
       //        authors += Author(s(0).toInt, s(1), s(2), s(3))
       //      })
-      complete(s"Authors, records snd token clean")
+      complete(s"Authors, records and token clean")
+    }
+  }
+
+  val reset: Route = pathPrefix("reset") {
+    authorize(true) {
+      records = Set.empty[Record]
+      tokens = Set.empty[TokenResponse]
+      authors = Set.empty[Author]
+      val au: mutable.Buffer[String] = conf.getStringList("application.authors").asScala
+      au.foreach(x => {
+        val s = x.split(";")
+        authors += Author(s(0).toInt, s(1), s(2), s(3))
+      })
+      complete(s"Authors, records and token reseted")
     }
   }
 
@@ -233,9 +247,8 @@ trait UserRoutes extends Processing {
 
   val myRoutes: Route = cors(st) {
     doc ~ sw ~ web ~ pathPrefix("v1") {
-      ping ~ about ~ clear ~ routeAuth ~ routeRubrics ~ routeAuthors ~ routeRecords
+      ping ~ about ~ clear ~ reset ~ routeAuth ~ routeRubrics ~ routeAuthors ~ routeRecords
     }
   }
-
 }
 

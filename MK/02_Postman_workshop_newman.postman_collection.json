@@ -1,0 +1,338 @@
+{
+	"info": {
+		"_postman_id": "d552ba2d-a0a9-4f88-b418-3c44ad23bf24",
+		"name": "Postman workshop newman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{hostPort}}/v1/ping",
+					"protocol": "http",
+					"host": [
+						"{{hostPort}}"
+					],
+					"path": [
+						"v1",
+						"ping"
+					]
+				},
+				"description": "Проверка работоспособности сервиса"
+			},
+			"response": []
+		},
+		{
+			"name": "1 Add author",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "fe6a7fc8-d6da-4bbc-942a-6a128974df12",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b98842c7-cf8a-44f0-bd86-f7c697d46b94",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"description": "(Required) Bearer auth token. Value example: 'Bearer 84f8a84bc0edeeb5742e9c2b706e94ea'",
+						"key": "Authorization",
+						"value": "{{Authorization}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 1,\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"position\": \"{{$randomJobType}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{hostPort}}/v1/author",
+					"protocol": "http",
+					"host": [
+						"{{hostPort}}"
+					],
+					"path": [
+						"v1",
+						"author"
+					]
+				},
+				"description": "Генерация данных для запроса - чтение из файла"
+			},
+			"response": [
+				{
+					"name": "successful operation",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "<string>",
+								"description": "(Required) Bearer auth token. Value example: 'Bearer 84f8a84bc0edeeb5742e9c2b706e94ea'"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 5,\n    \"firstName\": \"Ivan\",\n    \"lastName\": \"Ivanov\",\n    \"position\": \"Corrector\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/author",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"author"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n \"id\": 5,\n \"firstName\": \"Ivan\",\n \"lastName\": \"Ivanov\",\n \"position\": \"Corrector\"\n}"
+				}
+			]
+		},
+		{
+			"name": "2 Add a new record to the store",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2006fb7d-d512-4100-895b-1b9afdb9ad62",
+						"exec": [
+							"pm.test(\"Get record id\", function () {\r",
+							"    var rid = pm.response.json().id;\r",
+							"    pm.globals.set(\"recid\",rid);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"rubricId\": 1,\r\n\t\"authorId\": 1,\r\n\t\"title\": \"Some title\",\r\n\t\"content\": \"Some content\"\r\n}"
+				},
+				"url": {
+					"raw": "http://{{hostPort}}/v1/record",
+					"protocol": "http",
+					"host": [
+						"{{hostPort}}"
+					],
+					"path": [
+						"v1",
+						"record"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3 Update record status",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{hostPort}}/v1/record/{{recid}}?status=verified",
+					"protocol": "http",
+					"host": [
+						"{{hostPort}}"
+					],
+					"path": [
+						"v1",
+						"record",
+						"{{recid}}"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "verified"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4 Get record",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"url": {
+					"raw": "http://{{hostPort}}/v1/record/{{recid}}",
+					"protocol": "http",
+					"host": [
+						"{{hostPort}}"
+					],
+					"path": [
+						"v1",
+						"record",
+						"{{recid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5 Delete record",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/plain"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://{{hostPort}}/v1/record/{{recid}}",
+					"protocol": "http",
+					"host": [
+						"{{hostPort}}"
+					],
+					"path": [
+						"v1",
+						"record",
+						"{{recid}}"
+					]
+				},
+				"description": "Delete record"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "2351ddeb-faa3-4656-8afa-c433f7eca65f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "f4bde0e8-ebe4-4c25-a119-1c6dc2aa1234",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "af9788d1-32db-44f2-88c9-5f0924bcd7fb",
+			"key": "host",
+			"value": "127.0.0.1",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"id": "04e939a0-7b16-4fab-884e-db0548305cf6",
+			"key": "port",
+			"value": "1234",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"id": "fb3744a0-88b9-439c-9861-ea48f3242af6",
+			"key": "host1",
+			"value": "192.168.88.241",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"id": "0e6e081b-0c1f-462f-8471-f4db50f2e78a",
+			"key": "hostPort",
+			"value": "127.0.0.1:1234",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
